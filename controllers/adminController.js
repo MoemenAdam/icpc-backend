@@ -31,6 +31,10 @@ const add = async (req, res, next) => {
 const login = async (req,res, next) => {
     const email = req.body.email;
     const password = req.body.password;
+    if(!email)
+        return next(errorHandler.create('Why not email ...?', 'Failed', 400));
+    if(!password)
+        return next(errorHandler.create('Why not password ...?', 'Failed', 400));
     const currentAdmin = await admin.findOne({email});
     if(!currentAdmin)
         return next(errorHandler.create('Invalid email', 'Failed', 404));
