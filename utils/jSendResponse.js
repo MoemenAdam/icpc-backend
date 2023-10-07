@@ -2,18 +2,18 @@ class jSendRes
 {
     constructor(data, message, statusCode)
     {
-        this.message = message;
         this.status = "Success";
-        this.statusCode = statusCode;
         this.data = data;
+        this.message = message;
+        this.statusCode = statusCode;
     }
     getObj()
     {
         const obj = {
-            message: this.message,
             status: this.status,
-            statusCode: this.statusCode,
-            data: this.data
+            data: this.data,
+            message: this.message,
+            statusCode: this.statusCode
         }
         return obj;
     }

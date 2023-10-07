@@ -7,8 +7,8 @@ class errorHandler extends Error
 
     create(message, status, statusCode)
     {
-        this.message = message;
         this.status = status;
+        this.message = message;
         this.statusCode = statusCode;
         return this;
     }
