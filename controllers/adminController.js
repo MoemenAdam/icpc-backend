@@ -47,7 +47,6 @@ const login = async (req,res, next) => {
     res.cookie("token", token, {
         httpOnly: true 
     });
-    console.log({currentAdmin});
     return res.json(new jSendRes({currentAdmin}, 'Logged in success', 200).getObj());
 }
 
