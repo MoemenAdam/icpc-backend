@@ -4,7 +4,7 @@ const adminController = require('../controllers/adminController');
 const asyncWrapper = require('../middlewares/asyncWrapper');
 const verifyAdmin = require('../middlewares/verifyAdminToken');
 router.route('/')
-            .get(asyncWrapper(adminController.getAll))
+            .get(verifyAdmin, asyncWrapper(adminController.getAll))
             .post(asyncWrapper(adminController.add));
             
 router.route('/login')

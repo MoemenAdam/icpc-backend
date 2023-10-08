@@ -28,6 +28,7 @@ const add = async (req, res, next) => {
 }
 
 
+
 const login = async (req,res, next) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -41,9 +42,12 @@ const login = async (req,res, next) => {
     const test = await bcrypt.compare(password, currentAdmin.password);
     if(!test)
         return next(errorHandler.create('Wrong password', 'Failed', 400));
-    const token = await genJWT({email});
-    currentAdmin.token = token;
-    await currentAdmin.save();
+    // token 
+    const token = await genJWT({id:currentAdmin._id, email});
+    res.cookie("token", token, {
+        httpOnly: true 
+    });
+    console.log({currentAdmin});
     return res.json(new jSendRes({currentAdmin}, 'Logged in success', 200).getObj());
 }
 
