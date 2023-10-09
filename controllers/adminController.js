@@ -28,7 +28,6 @@ const add = async (req, res, next) => {
 }
 
 
-
 const login = async (req,res, next) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -45,11 +44,11 @@ const login = async (req,res, next) => {
     // token 
     const token = await genJWT({id:currentAdmin._id, email});
     res.cookie("token", token, {
-        httpOnly: true 
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24
     });
-    return res.json(new jSendRes({currentAdmin}, 'Logged in success', 200).getObj());
+    return res.json(new jSendRes({token}, 'Logged in success', 200).getObj());
 }
-
 
 module.exports = {
     getAll,
