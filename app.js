@@ -5,7 +5,6 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const adminRouter = require('./routes/adminRouter.js');
 const contestantRouter = require('./routes/contestantRouter.js');
-const cokie = require('./routes/cookie.js');
 const dashboardRouter = require('./routes/dashboardRouter.js')
 // connect to database
 websiteConnect();
@@ -14,7 +13,6 @@ websiteConnect();
 app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
-app.use('/cookie', cokie)
 app.use('/api/admins', adminRouter);
 app.use('/api/contestants', contestantRouter);
 app.use('/api/dashboard', dashboardRouter);
