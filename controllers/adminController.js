@@ -43,9 +43,9 @@ const login = async (req,res, next) => {
         return next(errorHandler.create('Wrong password', 'Failed', 400));
     // token 
     const token = await genJWT({id:currentAdmin._id, email});
-    res.cookie("token", token, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24
+    res.cookie("jwt_token", token, {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true
     });
     return res.json(new jSendRes({token}, 'Logged in success', 200).getObj());
 }
