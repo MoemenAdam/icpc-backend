@@ -27,6 +27,14 @@ const add = async (req, res, next) => {
     return res.status(201).json(new jSendRes({newAdmin}, 'New Admin has been added....', 201));
 }
 
+const getAdmin = async (req, res, next) => {
+    const id = req.params.id; 
+    const currentAdmin = await admin.findById(id, {password: false, __v: false});
+    if(!currentAdmin)
+        return next(errorHandler.create('No admin found', 'Failed', 404));
+    console.log('success');
+    res.json(new jSendRes({admin : currentAdmin}, 'Here is admin data', 200).getObj());
+}
 
 const login = async (req,res, next) => {
     const email = req.body.email;
@@ -43,15 +51,13 @@ const login = async (req,res, next) => {
         return next(errorHandler.create('Wrong password', 'Failed', 400));
     // token 
     const token = await genJWT({id:currentAdmin._id, email});
-    res.cookie("jwt_token", token, {
-        maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true
-    });
-    return res.json(new jSendRes({token}, 'Logged in success', 200).getObj());
+    currentAdmin.token = token;
+    return res.json(new jSendRes({admin: currentAdmin}, 'Logged in success', 200).getObj());
 }
 
 module.exports = {
     getAll,
     add,
-    login
+    login,
+    getAdmin
 }

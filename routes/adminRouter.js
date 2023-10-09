@@ -7,6 +7,9 @@ router.route('/')
             .get(verifyAdmin, asyncWrapper(adminController.getAll))
             .post(asyncWrapper(adminController.add));
             
+router.route('/:id')
+            .get(verifyAdmin, asyncWrapper(adminController.getAdmin));
+            
 router.route('/login')
             .post(asyncWrapper(adminController.login));
 

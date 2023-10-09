@@ -4,7 +4,7 @@ const contestantController = require('../controllers/contestantController.js');
 const verifyAdmin = require('../middlewares/verifyAdminToken.js');
 
 router.route('/')
-        .get(contestantController.getAll)
+        .get(verifyAdmin,contestantController.getAll)
         .post(contestantController.addContestant);
 
 router.route('/:id')
