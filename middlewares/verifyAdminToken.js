@@ -11,12 +11,10 @@ module.exports = asyncWrapper( async (req, res, next) => {
     if(!token)
         return next(errorHandler.create('Bad format', 'Failed', 400));
     const decoded = await jwt.verify(token, process.env.JWT_Admin_Secret_Key);
-    req.currentAdmin = decoded;
     const email = decoded.email;
-    console.log(email);
     const admin = await adminModel.findOne({email});
-    console.log('success');
     if(!admin)
         return next(errorHandler.create('Didn\'t find that admin..', 'Failed', 404));
+    req.currentAdmin = decoded;
     next();
 });
