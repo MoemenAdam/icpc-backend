@@ -104,11 +104,7 @@ const login = async (req, res, next) => {
 };
 
 
-// get the total amount of contestants [admin]
 
-
-
-// get the number of pending contestants [admin]
 
 
 // get the pending contestants [admin]   [optional]

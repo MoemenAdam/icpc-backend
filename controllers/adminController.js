@@ -3,7 +3,7 @@ const {genAdminToken} = require('../utils/generateJWT');
 const bcrypt = require('bcryptjs');
 const errorHandler = require('../utils/errorHandler');
 const jSendRes = require('../utils/jSendResponse');
-
+// get all admins
 const getAll = async (req, res, next) => {
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
@@ -11,6 +11,7 @@ const getAll = async (req, res, next) => {
     const admins = await admin.find({}).limit(limit).skip(skip);
     return res.json(new jSendRes({admins}, 'Data retrived....', 200));
 };
+
 
 const add = async (req, res, next) => {
     const data = {
@@ -59,5 +60,5 @@ module.exports = {
     getAll,
     add,
     login,
-    getAdmin
+    getAdmin,
 }
