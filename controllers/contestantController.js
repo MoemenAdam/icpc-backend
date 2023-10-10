@@ -39,7 +39,7 @@ const getContestant = async (req, res, next) => {
 
 // delete a single contestant [admin]
 const deleteContestant = async (req, res, next) => {
-    const id = req.param.id;
+    const id = req.params.id;
     const contestant = await contestantModel.findOneAndDelete({_id: id});
     if(!contestant)
         return next(errorHandler.create('No contestant with that id found', 'Failed', 404));
@@ -127,8 +127,59 @@ const getActivated = async(req, res, next) => {
 };
 
 // accept the pending contestant [admin] 
+const acceptPending = async (req, res, next) => {
+    const id = req.params.id;
+    const contestant = await contestantModel.findOne({_id: id, activated: false});
+    if(!contestant)
+        return next(errorHandler.create('Didn\'t find in database', 'Failed', 404));
+    contestant.level = "Level#0";
+    contestant.activated = true;
+    await contestant.save();
+    res.json(new jSendRes({contestant}, 'Accepted contestant', 200));
+}
 
+// Lower level 
+const lower = async(req, res, next) => {
+    const id = req.params.id;
+    const contestant = await contestantModel.findById(id);
+    if(!contestant)
+        return next(errorHandler.create('Didn\'t find in database', 'Failed', 404));
+    const enums = ["Pending", "Level#0", "Level#1", "Level#2", "Retired"];
+    const idx = enums.findIndex((val) => {
+        return val == contestant.level;
+    });
+    if(idx == -1)   
+        return next(errorHandler.create('How bad enum', 'Failed', 400));
+    if(idx == 0)
+        return next(errorHandler.create('Can\'t lower him', 'Failed', 400));
+    contestant.level = enums[idx - 1];
+    if(idx - 1 == 0)
+        contestant.activated = false;
+    await contestant.save();
+    res.json(new jSendRes(contestant, 'Lowed the contestant', 200));
+}
 
+// id :     6525b8a606d00fecb726e10a
+// raise level
+const raise = async(req, res, next) => {
+    const id = req.params.id;
+    const contestant = await contestantModel.findById(id);
+    if(!contestant)
+        return next(errorHandler.create('Didn\'t find in database', 'Failed', 404));
+    const enums = ["Pending", "Level#0", "Level#1", "Level#2", "Retired"];
+    const idx = enums.findIndex((val) => {
+        return val == contestant.level;
+    });
+    if(idx == -1)   
+        return next(errorHandler.create('How bad enum', 'Failed', 400));
+    if(idx == 4)
+        return next(errorHandler.create('Can\'t raise him', 'Failed', 400));
+    contestant.level = enums[idx + 1];
+    contestant.activated = true;
+    await contestant.save();
+    console.log(idx);
+    res.json(new jSendRes(contestant, 'Raised the contestant', 200));
+}
 
 module.exports = {
     getAll,
@@ -138,6 +189,9 @@ module.exports = {
     getContestant,
     signup,
     login,
+    acceptPending,
     getPendings,
-    getActivated
+    getActivated, 
+    lower,
+    raise
 }

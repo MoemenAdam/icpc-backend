@@ -2,26 +2,34 @@ const express = require('express');
 const router = express.Router();
 const contestantController = require('../controllers/contestantController.js');
 const verifyAdmin = require('../middlewares/verifyAdminToken.js');
-
+const asyncWrapper = require('../middlewares/asyncWrapper.js')
+const verifyContestant = require('../middlewares/verifyContestantToken.js');
 router.route('/')
-        .get(verifyAdmin, contestantController.getAll)
-        .post(verifyAdmin, contestantController.addContestant);
+        .get(verifyAdmin, asyncWrapper(contestantController.getAll))
+        .post(verifyAdmin, asyncWrapper(contestantController.addContestant));
 
 router.route('/pendings')
-        .get(verifyAdmin, contestantController.getPendings);
+        .get(verifyAdmin, asyncWrapper(contestantController.getPendings));
 
+router.route('/accept/:id')
+        .get(verifyAdmin, asyncWrapper(contestantController.acceptPending));
+router.route('/lower/:id')
+        .get(verifyAdmin, asyncWrapper(contestantController.lower));
+router.route('/raise/:id')
+        .get(verifyAdmin, asyncWrapper(contestantController.raise));
 router.route('/activated')
-        .get(verifyAdmin, contestantController.getActivated);
+        .get(verifyAdmin, asyncWrapper(contestantController.getActivated));
+
 
 router.route('/:id')
-        .get(verifyAdmin, contestantController.getContestant)
-        .put(verifyAdmin, contestantController.updateContestant)
-        .delete(verifyAdmin, contestantController.deleteContestant);
+        .get(verifyAdmin, asyncWrapper(contestantController.getContestant))
+        .put(verifyAdmin, asyncWrapper(contestantController.updateContestant))
+        .delete(verifyAdmin, asyncWrapper(contestantController.deleteContestant));
 
 
 router.route('/signup')
-        .post(contestantController.signup);
+        .post(asyncWrapper(contestantController.signup));
 router.route('/login')
-        .post(contestantController.login);
+        .post(verifyContestant, asyncWrapper(contestantController.login));
         
 module.exports = router;
