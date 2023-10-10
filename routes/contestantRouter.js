@@ -7,6 +7,12 @@ router.route('/')
         .get(verifyAdmin, contestantController.getAll)
         .post(verifyAdmin, contestantController.addContestant);
 
+router.route('/pendings')
+        .get(verifyAdmin, contestantController.getPendings);
+
+router.route('/activated')
+        .get(verifyAdmin, contestantController.getActivated);
+
 router.route('/:id')
         .get(verifyAdmin, contestantController.getContestant)
         .put(verifyAdmin, contestantController.updateContestant)

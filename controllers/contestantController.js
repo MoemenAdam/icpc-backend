@@ -107,8 +107,24 @@ const login = async (req, res, next) => {
 
 
 
-// get the pending contestants [admin]   [optional]
+// get the pending contestants [admin]  
 
+const getPendings = async(req, res, next) => {
+    const limit = req.query.limit || 20;
+    const page = req.query.page || 1;
+    const skip = (page - 1) * limit;
+    const pendingContestants = await contestantModel.find({activated: false}, {password : false, __v: false}).limit(limit).skip(skip);
+    res.json(new jSendRes({pendings: pendingContestants}, 'Data retrived success', 200).getObj());
+};
+
+// get the activated contestants [admin]
+const getActivated = async(req, res, next) => {
+    const limit = req.query.limit || 20;
+    const page = req.query.page || 1;
+    const skip = (page - 1) * limit;
+    const activatedContestants = await contestantModel.find({activated: true}, {password : false, __v: false}).limit(limit).skip(skip);
+    res.json(new jSendRes({contestants: activatedContestants}, 'Data retrived success', 200).getObj());
+};
 
 // accept the pending contestant [admin] 
 
@@ -121,5 +137,7 @@ module.exports = {
     deleteContestant,
     getContestant,
     signup,
-    login
+    login,
+    getPendings,
+    getActivated
 }
