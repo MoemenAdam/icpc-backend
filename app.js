@@ -14,6 +14,9 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/admins', adminRouter);
 app.use('/api/contestants', contestantRouter);
+app.use('*', (req, res, next) => {
+    res.status(404).send(`</br> </br> <h1> Page Not Found </h1>`);
+});
 
 app.use((err, req, res, next) => {
     res.status(err.statusCode || 400).json({
