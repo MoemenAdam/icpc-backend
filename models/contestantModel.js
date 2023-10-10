@@ -38,6 +38,11 @@ const contestantSchema = new Schema({
         default: ["Welcome to ICPC Community"],
         required: true
     },
+    activated: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
     level: {
         type: String,
         enum: ["Pending", "Level#0", "Level#1", "Level#2", "Retired"],

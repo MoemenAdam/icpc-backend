@@ -1,5 +1,5 @@
 const admin = require('../models/adminModel');
-const genJWT = require('../utils/generateJWT');
+const {genAdminToken} = require('../utils/generateJWT');
 const bcrypt = require('bcryptjs');
 const errorHandler = require('../utils/errorHandler');
 const jSendRes = require('../utils/jSendResponse');
@@ -32,7 +32,6 @@ const getAdmin = async (req, res, next) => {
     const currentAdmin = await admin.findById(id, {password: false, __v: false});
     if(!currentAdmin)
         return next(errorHandler.create('No admin found', 'Failed', 404));
-    console.log('success');
     res.json(new jSendRes({admin : currentAdmin}, 'Here is admin data', 200).getObj());
 }
 
@@ -50,8 +49,9 @@ const login = async (req,res, next) => {
     if(!test)
         return next(errorHandler.create('Wrong password', 'Failed', 400));
     // token 
-    const token = await genJWT({id:currentAdmin._id, email});
+    const token = await genAdminToken({id:currentAdmin._id, email});
     currentAdmin.token = token;
+    await currentAdmin.save();
     return res.json(new jSendRes({admin: currentAdmin}, 'Logged in success', 200).getObj());
 }
 
