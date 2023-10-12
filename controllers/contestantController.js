@@ -179,6 +179,19 @@ const raise = async(req, res, next) => {
     res.json(new jSendRes(contestant, 'Raised the contestant', 200));
 }
 
+const getContestantsByLevel = async(req, res, next) => {
+    const l = (req.params.level) || -1;
+    if(l < 0 || l > 4)
+        return next(errorHandler.create(`bad level choosen ${l}`, 'Failed', 400));
+    const enums = ["Pending", "Level#0", "Level#1", "Level#2", "Retired"];
+    const level = enums[l];
+    const limit = req.query.limit || 20;
+    const page = req.query.page || 1;
+    const skip = (page - 1) * limit;
+    const contestants = await contestantModel.find({level}, {password: false, __v: false}).limit(limit).skip(skip);
+    res.json(new jSendRes({contestants}, 'Data retrived success', 200));
+};
+
 module.exports = {
     getAll,
     addContestant, 
@@ -191,5 +204,6 @@ module.exports = {
     getPendings,
     getActivated, 
     lower,
-    raise
+    raise,
+    getContestantsByLevel
 }

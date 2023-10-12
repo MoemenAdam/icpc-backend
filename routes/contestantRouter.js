@@ -11,6 +11,9 @@ router.route('/')
 router.route('/pendings')
         .get(verifyAdmin, asyncWrapper(contestantController.getPendings));
 
+router.route('/level/:level')
+        .get(verifyAdmin, asyncWrapper(contestantController.getContestantsByLevel));
+
 router.route('/accept/:id')
         .get(verifyAdmin, asyncWrapper(contestantController.acceptPending));
 router.route('/lower/:id')
