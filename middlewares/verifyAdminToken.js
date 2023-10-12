@@ -3,8 +3,7 @@ const errorHandler = require('../utils/errorHandler');
 const adminModel = require('../models/adminModel');
 const asyncWrapper = require('../middlewares/asyncWrapper');
 
-module.exports = async (req, res, next) => {
-    try{
+module.exports = asyncWrapper(async (req, res, next) => {
         const auth = req.headers['Authorization'] || req.headers['authorization'];
         if(!auth)
             return next(errorHandler.create('No token found, Unauthorized', 'Failed', 401));
@@ -18,9 +17,4 @@ module.exports = async (req, res, next) => {
             return next(errorHandler.create('Didn\'t find that admin.., Unauthorized', 'Failed', 401));
         req.currentAdmin = decoded;
         next();
-    }
-    catch(err)
-    {
-        return next(errorHandler.create(err.message + ', Unauthorized', 'Failed', 401));
-    }
-};
+}, 401);
