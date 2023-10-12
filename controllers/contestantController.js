@@ -19,7 +19,7 @@ const addContestant = async (req, res, next) => {
     const contestantData = req.body;
     const isExist = await contestantModel.findOne({email: contestantData.email});
     if(isExist)
-        return next(errorHandler.create('Email already exists', 'Failed', 400));
+        return next(errorHandler.create('Email already exists', 'Failed', 403));
     const contestant = new contestantModel({
         ...contestantData
     });
@@ -64,7 +64,7 @@ const signup = async (req, res, next) => {
     const contestantData = req.body;
     const isExist = await contestantModel.findOne({email: contestantData.email});
     if(isExist)
-        return next(errorHandler.create('Email already exists', 'Failed', 400));
+        return next(errorHandler.create('Email already exists', 'Failed', 403));
     // hasing password
     const hashedPassword = await bcrypt.hash(contestantData.password, 8);
     contestantData.password = hashedPassword;
@@ -84,9 +84,9 @@ const login = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     if(!email)
-        return next(errorHandler.create('Why no email...?', 'Failed', 400));
+        return next(errorHandler.create('Why no email...?', 'Failed', 406));
     if(!password)
-        return next(errorHandler.create('Why no password', 'Failed', 400));
+        return next(errorHandler.create('Why no password', 'Failed', 406));
     const contestant = await contestantModel.findOne({email});
     if(!contestant)
         return next(errorHandler.create('Email doesn\'t exist', 'Failed', 404));
@@ -94,7 +94,7 @@ const login = async (req, res, next) => {
         return next(errorHandler.create('This contestant is pending'));
     const test = await bcrypt.compare(password, contestant.password);
     if(!test)
-        return next(errorHandler.create('Wrong password', 'Failed', 400));
+        return next(errorHandler.create('Wrong password', 'Failed', 403));
     // generating new token
     const token = await genContestantToken({id: contestant._id, email: contestant.email});
     contestant.token = token;
@@ -150,7 +150,7 @@ const lower = async(req, res, next) => {
     if(idx == -1)   
         return next(errorHandler.create('How bad enum', 'Failed', 400));
     if(idx == 0)
-        return next(errorHandler.create('Can\'t lower him', 'Failed', 400));
+        return next(errorHandler.create('Can\'t lower him', 'Failed', 405));
     contestant.level = enums[idx - 1];
     if(idx - 1 == 0)
         contestant.activated = false;
@@ -172,7 +172,7 @@ const raise = async(req, res, next) => {
     if(idx == -1)   
         return next(errorHandler.create('How bad enum', 'Failed', 400));
     if(idx == 4)
-        return next(errorHandler.create('Can\'t raise him', 'Failed', 400));
+        return next(errorHandler.create('Can\'t raise him', 'Failed', 405));
     contestant.level = enums[idx + 1];
     contestant.activated = true;
     await contestant.save();
