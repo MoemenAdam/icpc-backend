@@ -30,6 +30,6 @@ router.route('/:id')
 router.route('/signup')
         .post(asyncWrapper(contestantController.signup));
 router.route('/login')
-        .post(verifyContestant, asyncWrapper(contestantController.login));
+        .post(asyncWrapper(contestantController.login));
         
 module.exports = router;

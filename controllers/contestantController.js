@@ -3,13 +3,12 @@ const jSendRes = require('../utils/jSendResponse');
 const {genContestantToken} = require('../utils/generateJWT');
 const bcrypt = require('bcryptjs');
 const errorHandler = require('../utils/errorHandler');
-const genToken = require('../utils/generateJWT');
 
 
 // get all contestant [admin]
 const getAll = async (req, res, next) => {
-    const page = req.qurey.page || 1;
-    const limit = req.query.limit || 10;
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 100;
     const skip = (page - 1) * limit;
     const contestants = await contestantModel.find().limit(limit).skip(skip);
     res.json(new jSendRes({contestants}, 'Data retrived success', 200).getObj());
