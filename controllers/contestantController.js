@@ -176,7 +176,6 @@ const raise = async(req, res, next) => {
     contestant.level = enums[idx + 1];
     contestant.activated = true;
     await contestant.save();
-    console.log(idx);
     res.json(new jSendRes(contestant, 'Raised the contestant', 200));
 }
 
